@@ -1,0 +1,32 @@
+name: tutorials
+services:
+  odoo:
+    image: odoo:18.0
+    tty: true # This is necessary for build
+    depends_on:
+      - db
+    volumes:
+      - ./config/odoo.conf:/etc/odoo/odoo.conf
+      - ./config/.vscode:/mnt/extra-addons/.vscode
+      - ./hooks:/tmp/hooks
+      - odoo-lib:/var/lib/odoo
+    ports:
+      - 8069:8069
+  db:
+    image: postgres:17
+    # Always restarting is necessary for build, but we also don't need
+    # `n` instances of postgres chilling in the background all day
+    restart: unless-stopped 
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=odoo
+      - POSTGRES_USER=odoo
+volumes:
+  # 'Capture' volumes created in images
+  # avoid spawning a million anon volumes 
+  postgres:
+
+  # Manually Created, see README
+  odoo-lib:
+    external: true

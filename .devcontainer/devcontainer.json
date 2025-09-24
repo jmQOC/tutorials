@@ -1,0 +1,85 @@
+{
+    // `${containerEnv:ODOO_VERSION}` comes from the Odoo Docker Images. E.G: 
+    // https://github.com/odoo/docker/blob/master/18.0/Dockerfile#L73
+    "name": "${localWorkspaceFolderBasename}-${containerEnv:ODOO_VERSION}",
+    "dockerComposeFile": [
+        "../compose.yml" // Base odoo compose defs
+    ],
+    "remoteUser": "root",
+    "service": "odoo",
+    "overrideCommand": true,
+    "workspaceFolder": "/mnt/extra-addons/",
+    "mounts": [
+        "source=${localWorkspaceFolder},target=/mnt/extra-addons,type=bind,consistency=delegated"
+    ],
+    //#region Lifecycle Hooks. 
+    "onCreateCommand": "/tmp/hooks/onCreateCommand.sh",
+    "updateContentCommand": "/tmp/hooks/updateContentCommand.sh",
+    "postCreateCommand": "/tmp/hooks/postCreateCommand.sh",
+    "postStartCommand": "/tmp/hooks/postStartCommand.sh",
+    "postAttachCommand": "/tmp/hooks/postAttachCommand.sh",
+    //#endregion
+    "features": {
+        "ghcr.io/devcontainers/features/git:1": {}
+    },
+    "customizations": {
+        "vscode": {
+            "settings": {
+                //#region General Settings
+                "window.title": "${dirty}${remoteName}",
+                //endregion
+                //#region Python Settings
+                "[python]": {
+                    "editor.defaultFormatter": "ms-python.black-formatter",
+                    "editor.formatOnSave": true,
+                    "editor.quickSuggestions": { // Odoo IDE Requirement
+                        "comments": "on",
+                        "other": "on",
+                        "strings": "on"
+                    },
+                    "editor.codeActionsOnSave": {
+                        "source.organizeImports": "explicit"
+                    }
+                },
+                //endregion
+                //#region XML Settings
+                "[xml]": {
+                    "editor.defaultFormatter": "redhat.vscode-xml",
+                    "editor.formatOnSave": true
+                },
+                "xml.format.preserveSpace": [
+                    "field",
+                    "attribute"
+                ],
+                //endregion
+                //#region Odoo IDE Settings
+                "python.analysis.typeCheckingMode": "standard",
+                "python.analysis.extraPaths": [
+                    "/usr/lib/python3/dist-packages/odoo/addons", // Base (Redundant?)
+                    "/var/lib/odoo/addons/${containerEnv:ODOO_VERSION}" // Enterprise
+                ],
+                "python.autoComplete.extraPaths": [
+                    "/usr/lib/python3/dist-packages/odoo/addons", // Base (Redundant?)
+                    "/var/lib/odoo/addons/${containerEnv:ODOO_VERSION}" // Enterprise
+                ],
+                "python.languageServer": "None",
+                "odooShortcuts.openFiles": true
+                //#endregion
+            },
+            "extensions": [
+                "ms-python.python",
+                "ms-python.debugpy",
+                "ms-python.vscode-pylance",
+                "ms-python.black-formatter",
+                "njpwerner.autodocstring",
+                "redhat.vscode-xml",
+                "eamodio.gitlens",
+                "jigar-patel.odoosnippets",
+                "trinhanhngoc.vscode-odoo",
+                "mvintg.odoo-file",
+                "odoo.owl-vision",
+                "mechatroner.rainbow-csv"
+            ]
+        }
+    }
+}

@@ -1,0 +1,76 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Odoo",
+            "consoleTitle": "Odoo Server",
+            "justMyCode": false,
+            "type": "debugpy",
+            "request": "launch",
+            "program": "/usr/bin/odoo",
+            "console": "integratedTerminal",
+            "args": [
+                "--dev",
+                "all",
+            ],
+            "presentation": {
+                "group": "Odoo Services",
+                "order": 1
+            }
+        },
+        {
+            "name": "Debug OWL",
+            "consoleTitle": "Odoo Web",
+            "request": "launch",
+            "type": "chrome",
+            "url": "http://localhost:8069/web?debug=assets",
+            "webRoot": "${workspaceFolder}",
+            "trace": true,
+            "sourceMaps": true,
+            "sourceMapRenames": true,
+            "outFiles": [
+                "${workspaceFolder}/**/*.js",
+                "/var/lib/odoo/16.0/addons/**/*.js",
+                "/usr/lib/python3/dist-packages/odoo/addons/**/*.js",
+                "!**/node_modules/**"
+            ],
+            "browserLaunchLocation": "ui"
+        },
+        {
+            "name": "Debug Odoo Shell",
+            "consoleTitle": "Odoo Shell",
+            "justMyCode": false,
+            "type": "debugpy",
+            "request": "launch",
+            "program": "/usr/bin/odoo",
+            "console": "integratedTerminal",
+            "args": [
+                "shell",
+                "--dev",
+                "all",
+            ],
+            "presentation": {
+                "group": "Odoo Services",
+                "order": 2
+            }
+        },
+    ],
+    "compounds": [
+        {
+            "name": "Odoo",
+            "configurations": [
+                "Debug Odoo",
+                "Debug OWL",
+            ],
+            "stopAll": true,
+            "presentation": {
+                "hidden": false,
+                "group": "Odoo",
+                "order": 1,
+            }
+        }
+    ]
+}
