@@ -3,5 +3,8 @@
     "version": "0.0",
     "author": "Jimmy McCann",
     "depends": ["base"],
-    "application": True,  # so that the module appears when the ‘Apps’ filter is on
+    "application": True,  # so that the module appears when the ‘Apps’ filter is on,
+    "data": [
+        "security/ir.model.access.csv",
+    ],
 }
