@@ -1,4 +1,5 @@
-from odoo import fields, models, api
+from odoo import fields, models
+from odoo.tools import date_utils
 
 
 class Property(models.Model):
@@ -7,9 +8,31 @@ class Property(models.Model):
 
     name = fields.Char("Property Name", required=True)
 
+    active = fields.Boolean("Is Active", default=True)
+
+    state = fields.Selection(
+        [
+            ("new", "New"),
+            ("offer-received", "Offer Received"),
+            ("offer-accepted", "Offer Accepted"),
+            ("sold", "Sold"),
+            ("cancelled", "Cancelled"),
+        ],
+        required=True,
+        copy=False,
+        default="new",
+    )
+
+    # So Gemini lied to me, you cannot do dynamic selections like I had before.
+    # It would likely require an additional static model with the categories for each property type.
+    # Probably close to how states and countries work
     property_type = fields.Selection(
         [
             ("residential", "Residential"),
+            ("single-family", "Single-Family Home"),
+            ("condo", "Condo"),
+            ("townhouse", "Townhouse"),
+            ("multi-family", "Multi-Family House"),
             ("commercial", "Commercial"),
             ("industrial", "Industrial"),
             ("land", "Land"),
@@ -17,10 +40,6 @@ class Property(models.Model):
         string="Property Type",
         default="residential",
         required=True,
-    )
-
-    category = fields.Selection(
-        selection="_get_property_categories", string="Property Category", required=False
     )
 
     street_address = fields.Char("Street Address", required=True)
@@ -33,15 +52,25 @@ class Property(models.Model):
 
     postal_code = fields.Char("Postal Code", required=True)
 
-    country_id = fields.Many2one("res.country", string="Country")
+    country_id = fields.Many2one(
+        "res.country",
+        string="Country",
+        default=lambda self: self.env["res.country"]
+        .search([("name", "=", "United States")], limit=1)
+        .id,
+    )
 
-    date_available = fields.Date("Date Available")
+    date_available = fields.Date(
+        "Date Available",
+        copy=False,
+        default=date_utils.add(fields.Date.today(), months=3),
+    )
 
     expected_price = fields.Float("Expected Price", (10, 2), required=True)
 
-    selling_price = fields.Float("Selling Price", (10, 2))
+    selling_price = fields.Float("Selling Price", (10, 2), readonly=True, copy=False)
 
-    bedrooms = fields.Integer("Number of Bedrooms")
+    bedrooms = fields.Integer("Number of Bedrooms", default=2)
 
     living_area = fields.Integer("Living Area (sq ft)")
 
@@ -57,14 +86,3 @@ class Property(models.Model):
         [("north", "North"), ("east", "East"), ("south", "South"), ("west", "West")],
         string="Garden Orientation",
     )
-
-    @api.depends("property_type")  # ensures the method runs when parent_field changes
-    def _get_property_categories(self):
-        if self.property_type == "residential":
-            return [
-                ("single-family", "Single-Family Home"),
-                ("condo", "Condo"),
-                ("townhouse", "Townhouse"),
-                ("multi-family", "Multi-Family House"),
-            ]
-        return []

@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="jmqoc_estate_property_action" model="ir.actions.act_window">
+        <field name="name">Real Estate Property</field>
+        <field name="res_model">jmqoc.estate.property</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>
