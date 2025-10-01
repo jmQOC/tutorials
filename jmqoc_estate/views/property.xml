@@ -2,7 +2,7 @@
 <odoo>
 
     <record id="jmqoc_estate_property_action" model="ir.actions.act_window">
-        <field name="name">Real Estate Property</field>
+        <field name="name">Properties</field>
         <field name="res_model">jmqoc.estate.property</field>
         <field name="view_mode">list,form</field>
     </record>
@@ -33,13 +33,13 @@
         <field name="arch" type="xml">
             <list string="Properties" limit="2">
                 <!-- the display names are defined in the Python object -->
-                <field name="name" width="150" />
-                <field name="postal_code" width="7" />
-                <field name="bedrooms" string="Bedrooms" width="3" />
-                <field name="living_area" width="11" />
-                <field name="expected_price" width="17" />
-                <field name="selling_price" width="17" />
-                <field name="date_available" width="13" />
+                <field name="name" width="29rem" />
+                <field name="postal_code" width="7rem" />
+                <field name="bedrooms" string="Bedrooms" width="3rem" />
+                <field name="living_area" width="11rem" />
+                <field name="expected_price" width="13rem" />
+                <field name="selling_price" width="13rem" />
+                <field name="date_available" width="11rem" />
             </list>
         </field>
     </record>
@@ -51,10 +51,16 @@
             <form string="Property">
                 <sheet>
                     <group>
-                        <div class="oe_title">
-                            <h1 class="mb32">
-                                <field name="name" class="mb16"/>
-                            </h1>
+                        <div class="oe_title mb32">
+                            <div class="mb16">
+                                <h1>
+                                    <field name="name" />
+                                </h1>
+                                <group>
+                                    <field name="property_type_id" />
+                                </group>
+                            </div>
+                            <field name="property_tag_ids" widget="many2many_tags" />
                         </div>
                         <group>
                             <field name="state" />                        
@@ -92,6 +98,15 @@
                                     <field name="garden_area" />
                                     <field name="garden_orientation" />
                                 </group>
+                            </group>
+                        </page>
+                        <page string="Offers">
+                            <field name="offer_ids" context="{'tree_view_ref': 'jmqoc_estate.jmqoc_estate_property_offer_view_list'}" />
+                        </page>    
+                        <page string="Other Info">
+                            <group>
+                                <field name="user_id" />
+                                <field name="partner_id" />
                             </group>
                         </page>
                     </notebook>

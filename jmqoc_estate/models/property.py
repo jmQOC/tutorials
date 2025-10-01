@@ -27,21 +27,27 @@ class Property(models.Model):
     # So Gemini lied to me, you cannot do dynamic selections like I had before.
     # It would likely require an additional static model with the categories for each property type.
     # Probably close to how states and countries work
-    property_type = fields.Selection(
-        [
-            ("residential", "Residential"),
-            ("single-family", "Single-Family Home"),
-            ("condo", "Condo"),
-            ("townhouse", "Townhouse"),
-            ("multi-family", "Multi-Family House"),
-            ("commercial", "Commercial"),
-            ("industrial", "Industrial"),
-            ("land", "Land"),
-        ],
-        string="Property Type",
-        default="residential",
-        required=True,
+    # property_type = fields.Selection(
+    #    [
+    #        ("residential", "Residential"),
+    #        ("single-family", "Single-Family Home"),
+    #        ("condo", "Condo"),
+    #        ("townhouse", "Townhouse"),
+    #        ("multi-family", "Multi-Family House"),
+    #        ("commercial", "Commercial"),
+    #        ("industrial", "Industrial"),
+    #        ("land", "Land"),
+    #   ],
+    #    string="Property Type",
+    #    default="residential",
+    #    required=True,
+    # )
+
+    property_type_id = fields.Many2one(
+        "jmqoc.estate.property.type", string="Property Type"
     )
+
+    property_tag_ids = fields.Many2many("jmqoc.estate.property.tag", string="Tags")
 
     description = fields.Char("Description")
 
@@ -63,16 +69,6 @@ class Property(models.Model):
         .id,
     )
 
-    date_available = fields.Date(
-        "Date Available",
-        copy=False,
-        default=date_utils.add(fields.Date.today(), months=3),
-    )
-
-    expected_price = fields.Float("Expected Price", (10, 2), required=True)
-
-    selling_price = fields.Float("Selling Price", (10, 2), readonly=True, copy=False)
-
     bedrooms = fields.Integer("Number of Bedrooms", default=2)
 
     living_area = fields.Integer("Living Area (sq ft)")
@@ -89,3 +85,23 @@ class Property(models.Model):
         [("north", "North"), ("east", "East"), ("south", "South"), ("west", "West")],
         string="Garden Orientation",
     )
+
+    date_available = fields.Date(
+        "Date Available",
+        copy=False,
+        default=date_utils.add(fields.Date.today(), months=3),
+    )
+
+    expected_price = fields.Float("Expected Price", (10, 2), required=True)
+
+    selling_price = fields.Float("Selling Price", (10, 2), readonly=True, copy=False)
+
+    user_id = fields.Many2one(
+        "res.users", string="Salesman", default=lambda self: self.env.uid
+    )
+
+    offer_ids = fields.One2many(
+        "jmqoc.estate.property.offer", "property_id", string="Offers"
+    )
+
+    partner_id = fields.Many2one("res.partner", string="Buyer", copy=False)

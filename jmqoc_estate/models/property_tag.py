@@ -1,0 +1,9 @@
+from odoo import fields, models
+
+
+class PropertyTag(models.Model):
+
+    _name = "jmqoc.estate.property.tag"
+    _description = "Real Estate Property Tag"
+
+    name = fields.Char("Tag", required=True)

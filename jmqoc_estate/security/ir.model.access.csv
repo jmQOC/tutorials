@@ -1,2 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-jmqoc_estate.access_jmqoc_estate_property,access_jmqoc_estate_property,jmqoc_estate.model_jmqoc_estate_property,base.group_user,1,1,1,1
+access_jmqoc_estate_property,access_jmqoc_estate_property,model_jmqoc_estate_property,base.group_user,1,1,1,1
+access_jmqoc_estate_property_type,access_jmqoc_estate_property_type,model_jmqoc_estate_property_type,base.group_user,1,1,1,1
+access_jmqoc_estate_property_tag,access_jmqoc_estate_property_tag,model_jmqoc_estate_property_tag,base.group_user,1,1,1,1
+access_jmqoc_estate_property_offer,access_jmqoc_estate_property_offer,model_jmqoc_estate_property_offer,base.group_user,1,1,1,1

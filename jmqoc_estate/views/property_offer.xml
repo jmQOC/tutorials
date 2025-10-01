@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="jmqoc_estate_property_offer_view_list" model="ir.ui.view">
+        <field name="name">jmqoc.estate.property.offer.list</field>
+        <field name="model">jmqoc.estate.property.offer</field>
+        <field name="arch" type="xml">
+            <list string="Property Offer" limit="3">
+                <!--
+                <field name="property_id" width="29rem" />
+                -->
+                <field name="partner_id" width="29rem" />
+                <field name="price" width="13rem" />
+                <field name="status" width="17rem" />
+            </list>
+        </field>
+    </record>
+
+    <record id="jmqoc_estate_property_offer_view_form" model="ir.ui.view">
+        <field name="name">jmqoc.estate.property.offer.form</field>
+        <field name="model">jmqoc.estate.property.offer</field>
+        <field name="arch" type="xml">
+            <form string="Property Offer">
+               <sheet>
+                    <group>
+                        <field name="property_id" />
+                        <field name="partner_id" />                        
+                    </group>
+                    <group>
+                        <field name="status" />
+                        <field name="price" />
+                    </group>
+               </sheet> 
+            </form>
+        </field>
+    </record>
+
+</odoo>

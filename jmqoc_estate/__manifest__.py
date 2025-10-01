@@ -6,7 +6,10 @@
     "application": True,  # so that the module appears when the ‘Apps’ filter is on,
     "data": [
         "security/ir.model.access.csv",
-        "views/jmqoc_estate_property_views.xml",
-        "views/jmqoc_estate_menus.xml",
+        "views/property_offer.xml",
+        "views/property.xml",
+        "views/property_tag.xml",
+        "views/property_type.xml",
+        "views/menus.xml",
     ],
 }
