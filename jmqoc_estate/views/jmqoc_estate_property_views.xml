@@ -7,4 +7,97 @@
         <field name="view_mode">list,form</field>
     </record>
 
+    <record id="jmqoc_estate_property_view_search" model="ir.ui.view">
+        <field name="name">jmqoc.estate.property.search</field>
+        <field name="model">jmqoc.estate.property</field>
+        <field name="arch" type="xml">
+            <search string="Properties">
+                <field name="name" />
+                <field name="postal_code" />
+                <field name="expected_price" />
+                <field name="bedrooms" />
+                <field name="living_area" />
+                <field name="facades" />
+                <separator/>
+                <filter name="available" string="Available" domain="[('date_available', '&lt;=', context_today()), '|', ('state', '=', 'new'), ('state', '=', 'offer-received')]"/>
+                <group expand="1" string="string">
+                   <filter name="postal_code" string="Postcode" context="{'group_by':'postal_code', 'residual_visible':True}"/> 
+                </group>
+            </search>           
+        </field>
+    </record>
+
+    <record id="jmqoc_estate_property_view_list" model="ir.ui.view">
+        <field name="name">jmqoc.estate.property.list</field>
+        <field name="model">jmqoc.estate.property</field>
+        <field name="arch" type="xml">
+            <list string="Properties" limit="2">
+                <!-- the display names are defined in the Python object -->
+                <field name="name" width="150" />
+                <field name="postal_code" width="7" />
+                <field name="bedrooms" string="Bedrooms" width="3" />
+                <field name="living_area" width="11" />
+                <field name="expected_price" width="17" />
+                <field name="selling_price" width="17" />
+                <field name="date_available" width="13" />
+            </list>
+        </field>
+    </record>
+
+    <record id="jmqoc_estate_property_view_form" model="ir.ui.view">
+        <field name="name">jmqoc.estate.property.form</field>
+        <field name="model">jmqoc.estate.property</field>
+        <field name="arch" type="xml">
+            <form string="Property">
+                <sheet>
+                    <group>
+                        <div class="oe_title">
+                            <h1 class="mb32">
+                                <field name="name" class="mb16"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <field name="state" />                        
+                        </group>
+                    </group>
+                   <group>
+                        <!-- groups are like flex boxes -->
+                        <group>
+                            <field name="street_address" />
+                            <field name="city" />
+                            <field name="state_id" />
+                            <field name="postal_code" />
+                            <field name="country_id" />                       
+                        </group>
+                        <group>
+                            <field name="expected_price" />
+                            <field name="selling_price" />
+                            <field name="date_available" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description">
+                            <group>
+                                <field name="description" />
+                            </group>
+                            <group>
+                                <group>
+                                    <field name="bedrooms" />
+                                    <field name="living_area" />
+                                    <field name="facades" />
+                                    <field name="garage" />
+                                </group>
+                                <group>
+                                    <field name="garden" />
+                                    <field name="garden_area" />
+                                    <field name="garden_orientation" />
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
 </odoo>

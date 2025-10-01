@@ -6,7 +6,7 @@ class Property(models.Model):
     _name = "jmqoc.estate.property"
     _description = "Real Estate Property"
 
-    name = fields.Char("Property Name", required=True)
+    name = fields.Char("Title", required=True)
 
     active = fields.Boolean("Is Active", default=True)
 
@@ -18,6 +18,7 @@ class Property(models.Model):
             ("sold", "Sold"),
             ("cancelled", "Cancelled"),
         ],
+        string="Status",
         required=True,
         copy=False,
         default="new",
@@ -42,6 +43,8 @@ class Property(models.Model):
         required=True,
     )
 
+    description = fields.Char("Description")
+
     street_address = fields.Char("Street Address", required=True)
 
     city = fields.Char("City", required=True)
@@ -50,7 +53,7 @@ class Property(models.Model):
         "res.country.state", string="State", domain="[('country_id', '=', country_id)]"
     )
 
-    postal_code = fields.Char("Postal Code", required=True)
+    postal_code = fields.Char("Postcode", required=True)
 
     country_id = fields.Many2one(
         "res.country",
