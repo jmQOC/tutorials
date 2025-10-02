@@ -88,3 +88,11 @@ class PropertyOffer(models.Model):
                 offer.property_id.partner_id = offer.partner_id
 
         return True
+
+    _sql_constraints = [
+        (
+            "check_price",
+            "CHECK(price > 0)",
+            "An offer's price must be strictly positive",
+        )
+    ]

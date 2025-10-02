@@ -1,6 +1,6 @@
 from odoo import api, fields, models
-from odoo.exceptions import UserError
-from odoo.tools import date_utils
+from odoo.exceptions import UserError, ValidationError
+from odoo.tools import date_utils, float_utils
 
 import logging
 
@@ -148,6 +148,27 @@ class Property(models.Model):
 
     selling_price = fields.Float("Selling Price", (10, 2), readonly=True, copy=False)
 
+    @api.constrains("selling_price")
+    def _check_selling_price(self):
+        for property in self:
+            _logger.info(
+                f"Checking that the selling price of {property.name} is at least 90% of its expected price"
+            )
+            # float_compare returns
+            #   -1 : If the first value is less than the second value.
+            #    0 : If the first value is equal to the second value.
+            #    1 : If the first value is greater than the second value.
+            if (
+                not float_utils.float_is_zero(property.selling_price, 2)
+                and float_utils.float_compare(
+                    property.selling_price, property.expected_price * 0.9, 2
+                )
+                == -1
+            ):
+                raise ValidationError(
+                    f"The selling price of a property cannot be lower than 90% of its expected price."
+                )
+
     user_id = fields.Many2one(
         "res.users", string="Salesman", default=lambda self: self.env.uid
     )
@@ -157,3 +178,16 @@ class Property(models.Model):
     )
 
     partner_id = fields.Many2one("res.partner", string="Buyer", copy=False)
+
+    _sql_constraints = [
+        (
+            "check_expected_price",
+            "CHECK(expected_price > 0)",
+            "A property's expected price must be strictly positive",
+        ),
+        (
+            "check_selling_price",
+            "CHECK(selling_price >= 0)",
+            "A property's selling price must be positive",
+        ),
+    ]
