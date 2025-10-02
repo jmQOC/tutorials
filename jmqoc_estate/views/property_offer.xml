@@ -9,8 +9,10 @@
                 <!--
                 <field name="property_id" width="29rem" />
                 -->
-                <field name="partner_id" width="29rem" />
                 <field name="price" width="13rem" />
+                <field name="partner_id" width="29rem" />
+                <field name="validity" width="5rem" />
+                <field name="deadline" width="11rem" />
                 <field name="status" width="17rem" />
             </list>
         </field>
@@ -27,8 +29,10 @@
                         <field name="partner_id" />                        
                     </group>
                     <group>
-                        <field name="status" />
                         <field name="price" />
+                        <field name="validity" />
+                        <field name="deadline" />
+                        <field name="status" />
                     </group>
                </sheet> 
             </form>

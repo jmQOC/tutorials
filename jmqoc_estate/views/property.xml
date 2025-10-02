@@ -99,6 +99,9 @@
                                     <field name="garden_orientation" />
                                 </group>
                             </group>
+                            <group>
+                                <field name="total_area" />
+                            </group>
                         </page>
                         <page string="Offers">
                             <field name="offer_ids" context="{'tree_view_ref': 'jmqoc_estate.jmqoc_estate_property_offer_view_list'}" />
