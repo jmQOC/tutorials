@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from odoo.exceptions import UserError
 from odoo.tools import date_utils
 
 import logging
@@ -28,6 +29,32 @@ class Property(models.Model):
         copy=False,
         default="new",
     )
+
+    def update_state(self):
+        to_state = self.env.context.get("to_state")
+        possible_states: list = [
+            s[0]
+            for s in self.env["jmqoc.estate.property"]
+            ._fields["state"]
+            .selection  # pyright: ignore
+        ]
+        # Always assume that a method can be called on multiple records
+        for property in self:
+            _logger.info(
+                f"Received request to update state of {property.name} to {to_state}"
+            )
+
+            if property.state == "cancelled" and to_state == "sold":
+                raise UserError("Cancelled properties can not be sold")
+            if property.state == "sold" and to_state == "cancelled":
+                raise UserError("Sold properties can not be cancelled")
+
+            if to_state not in possible_states:
+                raise UserError(f"{to_state} is not a valid state for a Property")
+
+            property.state = to_state
+
+        return True
 
     # So Gemini lied to me, you cannot do dynamic selections like I had before.
     # It would likely require an additional static model with the categories for each property type.

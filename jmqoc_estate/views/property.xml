@@ -49,6 +49,11 @@
         <field name="model">jmqoc.estate.property</field>
         <field name="arch" type="xml">
             <form string="Property">
+                <header>
+                    <button name="update_state" string="Sold" type="object" context="{'to_state': 'sold'}"/>
+                    <button name="update_state" string="Cancelled" type="object" context="{'to_state': 'cancelled'}"/>
+                    <button name="update_state" string="FooBar" type="object" context="{'to_state': 'foobar'}"/>
+                </header>
                 <sheet>
                     <group>
                         <div class="oe_title mb32">

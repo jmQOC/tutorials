@@ -13,6 +13,8 @@
                 <field name="partner_id" width="29rem" />
                 <field name="validity" width="5rem" />
                 <field name="deadline" width="11rem" />
+                <button name="update_status" string="Accept" type="object" icon="fa-check" context="{'to_status': 'accepted'}" width="2rem" />
+                <button name="update_status" string="Refuse" type="object" icon="fa-close" context="{'to_status': 'refused'}" width="2rem" />
                 <field name="status" width="17rem" />
             </list>
         </field>

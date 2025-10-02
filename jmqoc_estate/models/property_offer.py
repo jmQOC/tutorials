@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from odoo.exceptions import UserError
 from odoo.tools import date_utils
 
 import logging
@@ -45,3 +46,45 @@ class PropertyOffer(models.Model):
     status = fields.Selection(
         [("accepted", "Accepted"), ("refused", "Refused")], copy=False
     )
+
+    def update_status(self):
+        to_status = self.env.context.get("to_status")
+        possible_statuses: list = [
+            s[0]
+            for s in self.env["jmqoc.estate.property.offer"]
+            ._fields["status"]
+            .selection  # pyright: ignore
+        ]
+        # Always assume that a method can be called on multiple records
+        for offer in self:
+            _logger.info(
+                f"Received request to update status of offer from {offer.partner_id.name} on {offer.property_id.name} to {to_status}"
+            )
+
+            if offer.status == "accepted" and to_status == "refused":
+                raise UserError("Accepted offers can not be refused")
+            if offer.status == "refused" and to_status == "accepted":
+                raise UserError("Refused offers can not be accepted")
+
+            if offer.property_id.state == "offer-accepted" and to_status == "accepted":
+                raise UserError(
+                    "Can not accept an offer on a property with an 'Offer Accepted' status"
+                )
+
+            if to_status == "accepted" and "accepted" in [
+                o.status for o in offer.property_id.offer_ids
+            ]:
+                raise UserError(
+                    "Can not accept additional offers on a property with an already accepted offer"
+                )
+
+            if to_status not in possible_statuses:
+                raise UserError(f"{to_status} is not a valid status for an Offer")
+
+            offer.status = to_status
+            if to_status == "accepted":
+                offer.property_id.state = "offer-accepted"
+                offer.property_id.selling_price = offer.price
+                offer.property_id.partner_id = offer.partner_id
+
+        return True
