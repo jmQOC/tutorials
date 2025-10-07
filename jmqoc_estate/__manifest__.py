@@ -6,6 +6,7 @@
     "application": True,  # so that the module appears when the ‘Apps’ filter is on,
     "data": [
         "security/ir.model.access.csv",
+        "views/user.xml",
         "views/property_offer.xml",
         "views/property.xml",
         "views/property_tag.xml",

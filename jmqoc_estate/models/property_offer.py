@@ -12,6 +12,28 @@ class PropertyOffer(models.Model):
     _name = "jmqoc.estate.property.offer"
     _description = "Real Estate Purchase Offer on a Property"
 
+    @api.model_create_multi
+    def create(self, vals_list):
+
+        for new_offer in vals_list:
+            _logger.info(f"Processing request to create new offer ({new_offer})")
+
+            on_property = self.env["jmqoc.estate.property"].browse(
+                new_offer["property_id"]
+            )
+
+            lowest_offer = min(offer.price for offer in on_property.offer_ids)
+
+            if new_offer["price"] < lowest_offer:
+                raise UserError(
+                    f"Can not create an offer for less than already reccieved offer ({lowest_offer})"
+                )
+
+            if on_property.state not in ["offer-accepted", "sold", "cancelled"]:
+                on_property.state = "offer-received"
+
+        return super().create(vals_list)
+
     property_id = fields.Many2one("jmqoc.estate.property", string="On Property")
 
     partner_id = fields.Many2one("res.partner", string="Buyer", required=True)

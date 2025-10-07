@@ -56,6 +56,13 @@ class Property(models.Model):
 
         return True
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_new_cancelled(self):
+        if any(property.state not in ["new", "cancelled"] for property in self):
+            raise UserError(
+                "Only properties in a 'New' or 'Cancelled' status can be deleted"
+            )
+
     # So Gemini lied to me, you cannot do dynamic selections like I had before.
     # It would likely require an additional static model with the categories for each property type.
     # Probably close to how states and countries work
